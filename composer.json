@@ -1,0 +1,22 @@
+{
+    "name": "php-baremetal/ext-store",
+    "description": "Persistent key-value store: survives resets and power cuts.",
+    "version": "1.0.0",
+    "type": "bm-ext",
+    "license": "MIT",
+    "authors": [
+        { "name": "Gianfrancesco Aurecchia", "email": "gianfri@aurecchia.com" }
+    ],
+    "require": {
+        "php": ">=8.3",
+        "php-baremetal/store-hal": "^1.0"
+    },
+    "extra": {
+        "baremetal": {
+            "kind": "ext",
+            "ext": "store",
+            "src-dir": "src",
+            "idf-requires": []
+        }
+    }
+}
