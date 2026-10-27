@@ -26,7 +26,7 @@ provisioning flags. Flash wears out, so values that change on every loop tick or
 | --- | --- |
 | `php-baremetal/store-hal` (virtual) | The platform side: where and how the bytes are kept. On ESP32 it is `php-baremetal/esp32-store-hal` (platform `esp32`, over `nvs_flash`), which also brings `php-baremetal/esp32-executor`. |
 
-You never require the HAL yourself. Conductor reads the platform from `extra.baremetal.sdk` (`esp32@^1.0` gives
+You never require the HAL yourself. Conductor reads the platform from `extra.baremetal.sdk` (`esp32@^2.0` gives
 `esp32`) and adds `php-baremetal/esp32-store-hal` while Composer resolves. The extension's PHP module is `store`.
 
 The ESP32 HAL declares its own flash partition: an NVS partition named `phpstore`, 24K, added to the board's
@@ -74,7 +74,7 @@ The resulting `composer.json`, for a Waveshare ESP32-S3-Touch-LCD-1.85B:
   },
   "extra": {
     "baremetal": {
-      "sdk": "esp32@^1.0",
+      "sdk": "esp32@^2.0",
       "board": "waveshare-esp32-s3-touch-lcd-1.85b",
       "runtime": "init-loop",
       "storage": "embedded"
