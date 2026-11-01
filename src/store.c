@@ -24,9 +24,10 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_store_keys, 0, 0, IS_ARRAY, 0)
 ZEND_END_ARG_INFO()
 
-static inline bool key_ok(size_t len)
+/* Keys and values travel as C strings: one with a NUL byte would be cut short, so it is refused. */
+static inline bool key_ok(const char *key, size_t len)
 {
-    return bm_store_hal_ready() && len > 0 && len <= STORE_KEY_MAX;
+    return bm_store_hal_ready() && len > 0 && len <= STORE_KEY_MAX && memchr(key, '\0', len) == NULL;
 }
 
 static void store_key_cb(const char *key, void *ctx)
@@ -48,7 +49,7 @@ PHP_FUNCTION(store_set)
         Z_PARAM_STRING(val, vlen)
     ZEND_PARSE_PARAMETERS_END();
 
-    if (!key_ok(klen)) {
+    if (!key_ok(key, klen) || memchr(val, '\0', vlen) != NULL) {
         RETURN_FALSE;
     }
     RETURN_BOOL(bm_store_hal_set(key, val));
@@ -70,7 +71,7 @@ PHP_FUNCTION(store_get)
         Z_PARAM_ZVAL(def)
     ZEND_PARSE_PARAMETERS_END();
 
-    if (key_ok(klen)) {
+    if (key_ok(key, klen)) {
         size_t len = 0;
         if (bm_store_hal_get(key, NULL, &len) && len > 0) {
             char *buf = emalloc(len);
@@ -100,7 +101,7 @@ PHP_FUNCTION(store_has)
         Z_PARAM_STRING(key, klen)
     ZEND_PARSE_PARAMETERS_END();
 
-    if (!key_ok(klen)) {
+    if (!key_ok(key, klen)) {
         RETURN_FALSE;
     }
     RETURN_BOOL(bm_store_hal_has(key));
@@ -115,7 +116,7 @@ PHP_FUNCTION(store_delete)
         Z_PARAM_STRING(key, klen)
     ZEND_PARSE_PARAMETERS_END();
 
-    if (!key_ok(klen)) {
+    if (!key_ok(key, klen)) {
         RETURN_FALSE;
     }
     RETURN_BOOL(bm_store_hal_delete(key));

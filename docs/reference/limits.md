@@ -20,9 +20,8 @@ its size limits come from NVS.
 
 | Rule | When broken |
 | --- | --- |
-| 1 to 15 bytes long (byte length, not characters) | Treated as a missing key: `store_set()` returns `false`, `store_get()` the default. |
+| 1 to 15 bytes long (byte length, not characters), with no NUL byte | Treated as a missing key: `store_set()` returns `false`, `store_get()` the default. |
 | Unique in the store | `store_set()` on an existing key overwrites it. |
-| No NUL byte | The key is cut at the NUL, so `"a\0b"` is stored as `"a"`. |
 
 Short prefixes keep keys readable inside 15 bytes: `wifi.ssid`, `cal.x_off`, `boot.count`.
 
@@ -30,8 +29,8 @@ Short prefixes keep keys readable inside 15 bytes: `wifi.ssid`, `cal.x_off`, `bo
 
 - **Strings only.** Store numbers with `(string)` and cast back with `(int)` or `(float)`. Store arrays with
   `json_encode()` and read them with `json_decode(..., true)`.
-- **No NUL bytes.** A value ends at its first NUL byte and the rest is dropped without an error. Encode binary data
-  with `base64_encode()` or `bin2hex()`.
+- **No NUL bytes.** A value with a NUL byte makes `store_set()` return `false` and leaves the stored value as it
+  was (versions before 1.0.2 stored it cut at the first NUL). Encode binary data with `base64_encode()` or `bin2hex()`.
 - **Length.** NVS caps a string at 4000 bytes including its terminator. A longer value makes `store_set()` return
   `false`.
 - **Bounded total.** The number of entries is bounded by the 24K partition; when it is full, `store_set()` returns

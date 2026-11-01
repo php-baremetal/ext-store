@@ -34,15 +34,16 @@ Writes `$value` under `$key` and commits it to flash before returning.
 
 <!-- @params -->
 <!-- @param name="$key" type="string" required -->
-1 to 15 bytes. Any other length returns `false`.
+1 to 15 bytes, with no NUL byte. Any other key returns `false`.
 <!-- @endparam -->
 <!-- @param name="$value" type="string" required -->
-A string. Numbers, arrays and bytes need converting first; see [Limits and durability](../reference/limits.md).
+A string with no NUL byte. Numbers, arrays and bytes need converting first; see
+[Limits and durability](../reference/limits.md).
 <!-- @endparam -->
 <!-- @endparams -->
 
-Returns `true` once the value is in flash. Returns `false` for an invalid key, a store that is not available, a
-value NVS refuses (too long, or no room left in the partition) and a flash call that timed out.
+Returns `true` once the value is in flash. Returns `false` for an invalid key, a value with a NUL byte, a store that is
+not available, a value NVS refuses (too long, or no room left in the partition) and a flash call that timed out.
 
 ## store_get
 
