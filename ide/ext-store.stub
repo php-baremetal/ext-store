@@ -1,0 +1,83 @@
+<?php
+// php-baremetal/ext-store 1.1.0 — IDE helper, not loaded at runtime.
+
+namespace {
+    /**
+     * Writes a string value under a key and commits it to persistent storage before returning; an existing key
+     * is overwritten.
+     *
+     * Check the result while developing: a false usually means a key longer than 15 bytes. Only wrong argument types
+     * and counts throw.
+     *
+     * @param string $key 1 to 15 bytes (byte length, not characters), with no NUL byte; any other key returns false.
+     * @param string $value A string with no NUL byte and, including its terminator, at most 4000 bytes. Numbers,
+     *                      arrays and bytes need converting first (for example with (string), json_encode() or
+     *                      base64_encode()).
+     * @return bool true once the value is stored; false for an invalid key, a value with a NUL byte (the stored
+     *              value is left as it was), a store that is not available, a value the storage refuses (too long,
+     *              or no room left) or a storage call that timed out.
+     * @throws \TypeError When an argument is not a string.
+     * @throws \ArgumentCountError When called with other than two arguments.
+     */
+    function store_set(string $key, string $value): bool {}
+
+    /**
+     * Reads the string stored under a key.
+     *
+     * @param string $key The key to read (1 to 15 bytes, no NUL byte).
+     * @param string|null $default Returned when the key is absent, invalid, or the store is not available. It is
+     *                             returned as given; the declared type is ?string.
+     * @return string|null The stored string, or $default (null when none is given).
+     * @throws \TypeError When $key is not a string.
+     * @throws \ArgumentCountError When called with fewer than one or more than two arguments.
+     */
+    function store_get(string $key, ?string $default = null): ?string {}
+
+    /**
+     * Tells whether a key is stored.
+     *
+     * @param string $key The key to look for (1 to 15 bytes, no NUL byte).
+     * @return bool true when the key is stored; false for an invalid key or an unavailable store.
+     * @throws \TypeError When $key is not a string.
+     * @throws \ArgumentCountError When called with other than one argument.
+     */
+    function store_has(string $key): bool {}
+
+    /**
+     * Removes one key and commits the change.
+     *
+     * @param string $key The key to remove (1 to 15 bytes, no NUL byte).
+     * @return bool true when the key was removed; false when the key was not there, was invalid, or the store is
+     *              not available.
+     * @throws \TypeError When $key is not a string.
+     * @throws \ArgumentCountError When called with other than one argument.
+     */
+    function store_delete(string $key): bool {}
+
+    /**
+     * Removes every key of the script's store and commits the change; other data of the partition is untouched.
+     *
+     * @return bool true when the keys were removed; false when the store is not available or the erase failed.
+     * @throws \ArgumentCountError When called with arguments.
+     */
+    function store_clear(): bool {}
+
+    /**
+     * Lists the stored keys, in no particular order.
+     *
+     * @return array A list of key strings; [] when the store is empty or not available.
+     * @throws \Exception With the message "store_keys(): cannot list the keys (out of memory or NVS error)" when
+     *                    the keys cannot all be listed.
+     * @throws \ArgumentCountError When called with arguments.
+     */
+    function store_keys(): array {}
+
+    /**
+     * Tells whether the store opened at boot; use it to guard a script that may run on a board whose partition is
+     * damaged or unreadable.
+     *
+     * @return bool true once the store opened at boot.
+     * @throws \ArgumentCountError When called with arguments.
+     */
+    function store_available(): bool {}
+}

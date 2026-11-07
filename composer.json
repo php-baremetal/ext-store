@@ -15,7 +15,8 @@
     },
     "extra": {
         "baremetal": {
-            "module": "store"
+            "module": "store",
+            "ide-stubs": ["ide/ext-store.stub"]
         }
     }
 }
