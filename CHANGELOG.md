@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- Fixed: a failed `store_keys()` (out of memory or an NVS error) freed the returned array twice, corrupting the PHP heap (`zend_mm_heap corrupted` at a later allocation).
+
 ## 1.1.0
 
 - Added: ide/ext-store.stub, the PHP declarations of the package for IDEs (conductor copies it into vendor/php-baremetal/ide-stubs/).

@@ -142,6 +142,7 @@ PHP_FUNCTION(store_keys)
     }
     if (!bm_store_hal_keys(store_key_cb, return_value)) {
         zval_ptr_dtor(return_value);
+        ZVAL_NULL(return_value);   /* the caller frees an unused result: not the array freed here */
         zend_throw_exception(zend_ce_exception, "store_keys(): cannot list the keys (out of memory or NVS error)", 0);
         RETURN_THROWS();
     }
